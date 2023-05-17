@@ -3,11 +3,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+// comment
+
 FILE *inputFile = NULL;
 
 FILE *outFile = NULL;
 
-char *program, ch, buffer[100] = "";
+char *program, ch, buffer[100] = " ";
 
 long length;
 
@@ -18,10 +20,6 @@ int bufferPointer; // buffer pointer
 bool inlineCommentMode = false,
      multilineCommentMode = false,
      stringMode = false;
-
-int commentOperatorType = 1;
-
-int isCommentOperator(char left, char right);
 
 bool isSingleCharOperator(char ch);
 
@@ -83,36 +81,49 @@ void main(int argn, char *argv[])
         ch = *(program + i);
         i++;
 
-        // check if ch is a comment operator
-        commentOperatorType = isCommentOperator(ch, *(program + i));
+        char operator[2] = "";
+        operator[0] = ch;
+        operator[1] = *(program + i);
 
-        if (commentOperatorType == 1)
+        // check if ch is a comment operator
+
+        if (strcmp(operator, "/*") == 0)
         {
             // if receive to  activate or deactivate multilineCommentMode
-            multilineCommentMode = !multilineCommentMode;
+            multilineCommentMode = true;
             i++;
             continue;
         }
-        if (commentOperatorType == 2)
+        if (strcmp(operator, "*/") == 0)
         {
-            // if receive to // activate inlineCommentMode
+            // if receive to  activate or deactivate multilineCommentMode
+            multilineCommentMode = false;
+            i++;
+            continue;
+        }
+        if (strcmp(operator, "//") == 0)
+        {
+            // if receive to  activate or deactivate multilineCommentMode
             inlineCommentMode = true;
             i++;
             continue;
         }
-        if (ch == '\n')
+        if (ch == '\n' && inlineCommentMode == true)
         {
             // if receive to \n deactivate inlineCommentMode
             inlineCommentMode = false;
-            i++;
             continue;
         }
+
+
 
         // ignore other lines if we are in comments
         if (inlineCommentMode || multilineCommentMode)
         {
             continue;
         }
+
+
 
         // check if ch is string operator
         if (isStringOperator(ch))
@@ -134,6 +145,8 @@ void main(int argn, char *argv[])
             continue;
         }
 
+
+
         // check if string mode is active
         if (stringMode)
         {
@@ -142,11 +155,9 @@ void main(int argn, char *argv[])
             continue;
         }
 
-        // check ch is an single character  operator
-        char operator[2] = "";
-        operator[0] = ch;
-        operator[1] = *(program + i);
 
+
+        // check ch is an single character  operator
         if (isMultiCharOperator(operator))
         {
 
@@ -168,6 +179,8 @@ void main(int argn, char *argv[])
             continue;
         }
 
+        
+
         // check ch is an single character operator
         if (isSingleCharOperator(ch))
         {
@@ -185,8 +198,9 @@ void main(int argn, char *argv[])
             continue;
         }
 
-        // check if ch is delimeter
 
+
+        // check if ch is delimeter
         if (isDelimeter(ch))
         {
             if (strlen(buffer) != 0)
@@ -198,8 +212,10 @@ void main(int argn, char *argv[])
             continue;
         }
 
+
         buffer[bufferPointer] = ch;
         bufferPointer++;
+
     }
 
     fprintf(outFile, "</out>");
@@ -207,21 +223,6 @@ void main(int argn, char *argv[])
     fclose(inputFile);
 
     fclose(outFile);
-}
-
-int isCommentOperator(char left, char right)
-{
-    char operator[2] = "";
-    operator[0] = left;
-    operator[1] = right;
-
-    if (!strcmp(operator, "/*") ||
-        !strcmp(operator, "*/"))
-        return 1;
-
-    if (!strcmp(operator, "//"))
-        return 2;
-    return 0;
 }
 
 bool isSingleCharOperator(char ch)
@@ -338,7 +339,7 @@ void resetBuffer()
 
 bool isDelimeter(char ch)
 {
-    const char delimiters[] = {';', '\n', '{', '}', '<', '>', '(', ')', ':'};
+    const char delimiters[] = {';', '\n', ' ', '{', '}', '<', '>', '(', ')', ':', '\t', ',', '[', ']', '(', ')'};
 
     int i;
     bool flag = false;
@@ -350,11 +351,6 @@ bool isDelimeter(char ch)
             flag = true;
             break;
         }
-    }
-
-    if (ch == 32)
-    {
-        flag = true;
     }
 
     return flag;
@@ -373,13 +369,15 @@ void checkBufferAndPrint(char *buff)
         fprintf(outFile, "<number>%s</number>\n", buffer);
     }
     else
+    {
         printf("<identifire>%s</identifire>\n", buff);
-    fprintf(outFile, "<identifire>%s</identifire>\n", buffer);
+        fprintf(outFile, "<identifire>%s</identifire>\n", buffer);
+    }
 }
 
 bool isStringOperator(char ch)
 {
-    if (ch == 34)
+    if (ch + 0 == 34 || ch + 0 == 39)
         return true;
     return false;
 }
