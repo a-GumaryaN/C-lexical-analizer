@@ -1,4 +1,5 @@
 lexical analyzer for C language programs
+
 this program analyze any C program file lexically an then return one file in xml format.
 to use , after clone file's , compile cLexicalAnalyzer.c with any c compiler you want ,
 and then execute out put file with two argument:
