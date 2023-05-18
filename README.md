@@ -9,4 +9,4 @@ and then execute out put file with two argument:
 algorithm of this program:
 in this program we use a general algorithm that can analyze mane programming languages
 and looks like this:
-![](/home/gumaryan/Downloads/flowchart.jpg)
+![flowchart](https://github.com/a-GumaryaN/C-lexical-analizer/assets/76553715/eb0030c9-2002-45c2-845e-3a2ba3e9de5a)
