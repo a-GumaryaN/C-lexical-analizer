@@ -9,4 +9,4 @@ and then execute out put file with two argument:
 algorithm of this program:
 in this program we use a general algorithm that can analyze mane programming languages
 and looks like this:
-![](/mnt/HDD/projects/university/flowchart.drawio.svg)
+![](/home/gumaryan/Downloads/flowchart.jpg)
